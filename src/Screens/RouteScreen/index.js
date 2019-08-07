@@ -52,8 +52,11 @@ class RouteScreen extends Component {
           this.setDetails();
           this.setState({showLoader:false})
         })
+      } else {
+        Actions.login();
       }
     } catch (error) {
+      Actions.login();
     }
   };
  
@@ -78,7 +81,6 @@ class RouteScreen extends Component {
     ),
   };
   setDetails(){
-    console.log('hurray')
     let details =  this.props.userDetails;
     this.setState({
       token:details.token,
@@ -90,7 +92,6 @@ class RouteScreen extends Component {
   }
   componentWillReceiveProps(nextProps){
     let details = nextProps.userDetails;
-    console.log("DETAULS",details)
     this.setState({
       token:details.token,
       userId:details.user_id,
