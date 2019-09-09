@@ -5,7 +5,7 @@ import styles from "./styles";
 import AppOverlay from '../../AppOverlay'
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
 import RadioForm from 'react-native-simple-radio-button';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux';el
 import color from '../../utils/color'
 import { Actions} from 'react-native-router-flux';
 import api from '../../utils/ApiServices.js';
@@ -34,6 +34,11 @@ class RouteScreen extends Component {
         {label: 'Available on Tour', value: 1 },
         {label: 'Unavailable', value: 2 }
       ],
+      properties : {
+        0 : "verfügbar",
+        1 : "verfügbar auf tour",
+        2 : "nicht verfügbar"
+      }
     }
   }
   componentWillMount(){
@@ -43,7 +48,6 @@ class RouteScreen extends Component {
     this.getUserDetailsFromlocalStorage();
   }
   getUserDetailsFromlocalStorage = async () => {
-
     try {
       const value = await AsyncStorage.getItem('MyradkurierAppLoginkey');
       let obj = JSON.parse(value);
@@ -87,7 +91,7 @@ class RouteScreen extends Component {
       userId:details.user_id,
       currentStatus:Number(details.currentStatus),
       trackingId:details.trackingId,
-      label:this.state.radio_props[details.currentStatus!=''?details.currentStatus:2].label
+      label:this.state.properties[details.currentStatus!=''?details.currentStatus:2]
     })
   }
   componentWillReceiveProps(nextProps){
@@ -97,7 +101,7 @@ class RouteScreen extends Component {
       userId:details.user_id,
       currentStatus:Number(details.currentStatus!=''?details.currentStatus:2),
       trackingId:details.trackingId,
-      label:this.state.radio_props[details.currentStatus!='' ? details.currentStatus:2].label
+      label:this.state.properties[details.currentStatus!='' ? details.currentStatus:2]
     })
   }
   toggleModal() {
@@ -143,7 +147,7 @@ class RouteScreen extends Component {
       currentStatus:status,
       modalVisible:false,
       showLoader:true,
-      label:this.state.radio_props[status].label},()=>{
+      label:this.state.properties[status]},()=>{
       if (this.watchId !== null) {
         Geolocation.clearWatch(this.watchId);
       }
@@ -172,7 +176,7 @@ class RouteScreen extends Component {
       currentStatus:status,
       modalVisible:false,
       showLoader:true,
-      label:this.state.radio_props[status].label,
+      label:this.state.properties[status],
       trackingId:'',
       keepawake:false
     },()=>{
@@ -283,11 +287,9 @@ class RouteScreen extends Component {
     if(this.state.keepawake){
       this.state.keepawake = false;
       KeepAwake.activate();
-      console.log('JUNAID')
     }else{
       this.state.keepawake = true;
       KeepAwake.deactivate();
-      console.log('khan')
     }
   }
   render() {
@@ -327,7 +329,7 @@ class RouteScreen extends Component {
             imageStyle={styles.logo}
             source={images.theme1.servicePageImage} />
           <View style={{flexDirection:'row',justifyContent:'space-around',margin:20,marginTop:100}}>
-            <Text style={{position:'absolute',top:-50,textAlign:'center',left:0,right:0,fontWeight:'bold',color:color.primary }}>{this.state.label || 'Unavailable'}</Text>
+            <Text style={{position:'absolute',top:-50,textAlign:'center',left:0,right:0,fontWeight:'bold',color:color.primary }}>{this.state.label || 'nicht verfügbar'}</Text>
             <TouchableOpacity 
               onPress={()=>{this.toggleModal(true)}}
               style={styles.ctaContainer}>
